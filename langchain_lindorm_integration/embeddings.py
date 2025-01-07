@@ -121,13 +121,3 @@ class LindormAIEmbeddings(BaseModel, Embeddings):
         """
         response = self._infer(model_name=self.model_name, input_data=texts, params={})
         return response
-
-    async def aembed_documents(self, texts: List[str]) -> List[List[float]]:
-        """Asynchronous Embed search docs."""
-        return await run_in_executor(
-            self.executor, self.embed_documents, texts
-        )
-
-    async def aembed_query(self, text: str) -> List[float]:
-        """Asynchronous Embed query text."""
-        return await run_in_executor(self.executor, self.embed_query, text)
