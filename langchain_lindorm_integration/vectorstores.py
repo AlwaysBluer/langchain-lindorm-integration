@@ -41,7 +41,7 @@ def _bulk_ingest_embeddings(
 
     for i, text in enumerate(texts):
         metadata = metadatas[i] if metadatas else {}
-        _id = ids[i] if ids else str(uuid.uuid4())
+        _id = ids[i] if ids[i] else str(uuid.uuid4())
         request = {
             "_op_type": "index",
             "_index": index_name,
@@ -296,7 +296,7 @@ class LindormVectorStore(VectorStore):
 
     @property
     def embeddings(self) -> Embeddings:
-        return self.embeddings
+        return self.embedding
 
     def init_index(self, **kwargs: Any) -> None:
         not_found_error = import_not_found_error()
@@ -736,7 +736,7 @@ class LindormVectorStore(VectorStore):
             logger.warning("Texts size is zero!")
             return []
 
-        if not self.kwargs.get("overwrite", False):
+        if not self.kwargs.get("overwrite", True):
             texts, metadatas, ids = self.__filter_existed_ids(texts, metadatas, ids)
             logger.info(
                 f"after _id filter, texts num change from {total_items} => {len(texts)}"
@@ -1265,7 +1265,7 @@ class LindormVectorStore(VectorStore):
 
         return search_query
 
-    def get_by_ids(self, ids: Sequence[str]) -> List[Any]:
+    def get_by_ids(self, ids: Sequence[str]) -> list[Document]:
         query_body = {
             "query": {"terms": {"_id": ids}},
             "_source": True,
@@ -1273,11 +1273,9 @@ class LindormVectorStore(VectorStore):
         }
 
         docs = self.client.search(index=self.index_name, body=query_body, pretty=True)
-
         text_field = self.kwargs.get("text_field", "text")
         metadata_field = self.kwargs.get("metadata_field", "metadata")
-        documents_with_scores = [
-            (
+        documents = [
                 Document(
                     id=hit["_id"],
                     page_content=hit["_source"][text_field],
@@ -1286,12 +1284,10 @@ class LindormVectorStore(VectorStore):
                         if metadata_field == "*" or metadata_field not in hit["_source"]
                         else hit["_source"][metadata_field]
                     ),
-                ),
-                hit["_score"],
-            )
+                )
             for hit in docs["hits"]["hits"]
         ]
-        return documents_with_scores
+        return documents
 
     def check_allow_inherit(self, parent_index: str, mapping: Dict) -> Any:
         response = self.client.transport.perform_request(

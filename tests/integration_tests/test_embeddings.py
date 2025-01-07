@@ -7,7 +7,7 @@ from langchain_tests.integration_tests import EmbeddingsIntegrationTests
 
 
 class Config:
-    AI_LLM_ENDPOINT = os.environ.get("AI_ENDPOINT", "<AI_ENDPOINT>")
+    AI_ENDPOINT = os.environ.get("AI_ENDPOINT", "<AI_ENDPOINT>")
     AI_USERNAME = os.environ.get("AI_USERNAME", "root")
     AI_PWD = os.environ.get("AI_PASSWORD", "<PASSWORD>")
 
@@ -22,7 +22,7 @@ class TestParrotLinkEmbeddingsIntegration(EmbeddingsIntegrationTests):
     @property
     def embedding_model_params(self) -> dict:
         return {
-            "endpoint": Config.AI_LLM_ENDPOINT,
+            "endpoint": Config.AI_ENDPOINT,
             "username": Config.AI_USERNAME,
             "password": Config.AI_PWD,
             "model_name": Config.AI_DEFAULT_EMBEDDING_MODEL,

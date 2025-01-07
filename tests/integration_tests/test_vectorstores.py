@@ -4,6 +4,8 @@ from importlib import util
 from typing import AsyncGenerator, Generator, Any
 
 import pytest
+from langchain_tests.integration_tests.vectorstores import EMBEDDING_SIZE
+
 from langchain_lindorm_integration.vectorstores import LindormVectorStore
 from langchain_core.vectorstores import VectorStore
 from langchain_tests.integration_tests import VectorStoreIntegrationTests
@@ -23,13 +25,6 @@ def _get_opensearch_scan() -> Any:
 
 
 class Config:
-    AI_LLM_ENDPOINT = os.environ.get("AI_LLM_ENDPOINT", "<LLM_ENDPOINT>")
-    AI_EMB_ENDPOINT = os.environ.get("AI_EMB_ENDPOINT", "<EMB_ENDPOINT>")
-    AI_USERNAME = os.environ.get("AI_USERNAME", "root")
-    AI_PWD = os.environ.get("AI_PWD", "<PASSWORD>")
-
-    AI_DEFAULT_RERANK_MODEL = "rerank_bge_v2_m3"
-    AI_DEFAULT_EMBEDDING_MODEL = "bge_m3_model"
     SEARCH_ENDPOINT = os.environ.get("SEARCH_ENDPOINT", "SEARCH_ENDPOINT")
     SEARCH_USERNAME = os.environ.get("SEARCH_USERNAME", "root")
     SEARCH_PWD = os.environ.get("SEARCH_PWD", "<PASSWORD>")
@@ -38,23 +33,11 @@ class Config:
 logger = logging.getLogger(__name__)
 
 
-# def get_default_embedding() -> Any:
-#     embedding = LindormAIEmbeddings(
-#         endpoint=Config.AI_LLM_ENDPOINT,
-#         username=Config.AI_USERNAME,
-#         password=Config.AI_PWD,
-#         model_name=Config.AI_DEFAULT_EMBEDDING_MODEL,
-#         client=None,
-#     )
-#     return embedding
-
-# def get_default_embedding() -> Any:
-
-
 index_name = "langchain_test_index"
 
 BUILD_INDEX_PARAMS = {
     "lindorm_search_url": Config.SEARCH_ENDPOINT,
+    "dimension": EMBEDDING_SIZE,
     # default params
     # "embedding": get_default_embedding(),
     "http_auth": (Config.SEARCH_USERNAME, Config.SEARCH_PWD),
