@@ -57,8 +57,6 @@ BUILD_INDEX_PARAMS = {
     "space_type": "l2",
 }
 
-BUILD_INDEX = True
-
 
 class TestLindormIntegrationVectorStoreSync(VectorStoreIntegrationTests):
 
