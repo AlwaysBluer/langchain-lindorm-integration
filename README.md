@@ -170,3 +170,8 @@ assert result == [None, None]
 bytestore.client.indices.delete(index=index_name)
 
 ```
+
+## Build from Source code
+```shell
+poetry build
+```
