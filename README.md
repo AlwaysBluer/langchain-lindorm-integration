@@ -1,6 +1,3 @@
-def LindormAIEmbeddings():
-    passis package contains the LangChain integration with LindormIntegration
-
 ## Installation
 
 ```bash
